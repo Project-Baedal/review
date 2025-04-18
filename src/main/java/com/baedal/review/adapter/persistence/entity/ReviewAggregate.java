@@ -29,9 +29,7 @@ public class ReviewAggregate {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "reviewer_id", nullable = false)
-  private ReviewerAggregate reviewer;
+  private Long reviewerId;
 
   @Column(nullable = false)
   private Long storeId;
@@ -57,4 +55,5 @@ public class ReviewAggregate {
   public ReviewAggregate(Long id) {
     this.id = id;
   }
+
 }

@@ -1,6 +1,7 @@
 package com.baedal.review.application.service;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
+import com.baedal.review.adapter.persistence.entity.ReviewScore;
 import com.baedal.review.adapter.persistence.repository.ReviewRepository;
 import com.baedal.review.adapter.web.in.mapper.ReviewDetailMapper;
 import com.baedal.review.application.port.dto.ReviewDetail;
@@ -9,6 +10,7 @@ import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.StorePort;
 import com.baedal.review.domain.model.Customer;
 import com.baedal.review.domain.model.Store;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,14 +36,14 @@ public class ReviewCRUDService implements ReviewCRUDUsecase {
     ReviewAggregate reviewAggregate = reviewRepository.findById(reviewId)
         .orElseThrow(() -> new RuntimeException(""));
 
-    Customer customer = customerPort.getCustomer(reviewAggregate.getReviewer().getCustomerId());
+    Customer customer = customerPort.getCustomer(reviewAggregate.getReviewerId());
 
     Store store = storePort.getStore(reviewAggregate.getStoreId());
 
     return reviewDetailMapper.toReviewDetail(reviewAggregate, customer, store);
   }
 
-  @Override
+  @Transactional
   public void deleteReview(Long reviewId) {
     // TODO: 존재하는지 검증할까? 예외처리.
     //  - 예외로 충분할수도.
