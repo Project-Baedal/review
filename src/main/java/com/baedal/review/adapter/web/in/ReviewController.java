@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/v0")
@@ -23,21 +22,21 @@ public class ReviewController {
 
   private final ReviewCRUDUsecase reviewCRUDUsecase;
 
-  @GetMapping("/")
-  public ResponseEntity<ReviewDetail> getReview(@PathVariable Long reviewId) {
-    ReviewDetail reviewDetail = reviewCRUDUsecase.findReviewDetail(reviewId);
+  @GetMapping("/{reviewId}")
+  public ResponseEntity<ReviewDetail> getReview(@PathVariable("reviewId") Long id) {
+    ReviewDetail reviewDetail = reviewCRUDUsecase.findReviewDetail(id);
     return ResponseEntity.ok(reviewDetail);
   }
 
-  @PostMapping("/")
+  @PostMapping()
   public ResponseEntity<Void> createReview(@RequestBody CreateReviewRequest request) {
     Long reviewId = reviewCRUDUsecase.createReview(
-        request.getCustomerId(),
-        request.getStoreId(),
-        request.getOrderId(),
-        request.getScore(),
-        request.getContent(),
-        request.getAttchments());
+        request.customerId(),
+        request.storeId(),
+        request.orderId(),
+        request.score(),
+        request.content(),
+        request.attchments());
 
     URI uri = ServletUriComponentsBuilder
         .fromCurrentRequest()
@@ -48,7 +47,7 @@ public class ReviewController {
     return ResponseEntity.created(uri).build();
   }
 
-  @DeleteMapping("/")
+  @DeleteMapping()
   public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
     reviewCRUDUsecase.deleteReview(reviewId);
     return ResponseEntity.noContent().build();
