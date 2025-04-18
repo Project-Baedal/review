@@ -69,7 +69,7 @@ public class ReviewAggregate {
     review.content = content;
     review.attachments = attachmentUrls.stream()
         .map(url -> new ReviewAttachment(review, url))
-        .collect(Collectors.toList());
+        .toList();
     return review;
   }
 
