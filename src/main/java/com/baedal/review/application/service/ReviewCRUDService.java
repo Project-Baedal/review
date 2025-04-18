@@ -49,4 +49,23 @@ public class ReviewCRUDService implements ReviewCRUDUsecase {
     //  - 예외로 충분할수도.
     reviewRepository.delete(new ReviewAggregate(reviewId));
   }
+
+  @Transactional
+  public Long createReview(
+      Long customerId,
+      Long storeId,
+      Long orderId,
+      ReviewScore score,
+      String content,
+      List<String> attachments) {
+    ReviewAggregate review = reviewRepository.save(
+        ReviewAggregate.create(
+            customerId,
+            storeId,
+            orderId,
+            score,
+            content,
+            attachments));
+    return review.getId();
+  }
 }

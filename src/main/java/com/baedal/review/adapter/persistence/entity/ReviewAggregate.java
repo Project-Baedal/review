@@ -5,16 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,6 +52,25 @@ public class ReviewAggregate {
 
   public ReviewAggregate(Long id) {
     this.id = id;
+  }
+
+  public static ReviewAggregate create(
+      Long customerId,
+      Long storeId,
+      Long orderId,
+      ReviewScore score,
+      String content,
+      List<String> attachmentUrls) {
+    ReviewAggregate review = new ReviewAggregate();
+    review.reviewerId = customerId;
+    review.storeId = storeId;
+    review.orderId = orderId;
+    review.score = score;
+    review.content = content;
+    review.attachments = attachmentUrls.stream()
+        .map(url -> new ReviewAttachment(review, url))
+        .collect(Collectors.toList());
+    return review;
   }
 
 }
