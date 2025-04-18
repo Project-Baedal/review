@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: review
+
+  output:
+    ansi:
+      enabled: always
