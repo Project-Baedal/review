@@ -1,32 +1,32 @@
 package com.baedal.review.adapter.web.out.mapper;
 
-import com.baedal.review.adapter.web.out.response.GetCustomerResponse;
-import com.baedal.review.domain.model.Customer;
+import com.baedal.review.adapter.web.out.response.GetStoreResponse;
+import com.baedal.review.domain.model.Store;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-18T19:31:47+0900",
+    date = "2025-04-18T20:05:41+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
-public class CustomerMapperImpl implements CustomerMapper {
+public class StoreMapperImpl implements StoreMapper {
 
     @Override
-    public Customer toReviewer(GetCustomerResponse response) {
+    public Store toStore(GetStoreResponse response) {
         if ( response == null ) {
             return null;
         }
 
         Long id = null;
-        String nickname = null;
+        String name = null;
 
         id = response.id();
-        nickname = response.nickname();
+        name = response.name();
 
-        Customer customer = new Customer( id, nickname );
+        Store store = new Store( id, name );
 
-        return customer;
+        return store;
     }
 }
