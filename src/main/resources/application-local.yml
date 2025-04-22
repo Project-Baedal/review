@@ -1,0 +1,8 @@
+server:
+  port: 8084
+
+services:
+  customer:
+    url: http://localhost:8080
+  store:
+    url: http://localhost:8081
