@@ -55,8 +55,13 @@ class ReviewCRUDServiceTest {
     String content = "Great!";
     List<String> attachments = List.of("url1", "url2");
 
-    ReviewAggregate mockReview = ReviewAggregate.create(customerId, storeId, orderId, score,
-        content, attachments);
+    ReviewAggregate mockReview = ReviewAggregate.create(
+        customerId,
+        storeId,
+        orderId,
+        score,
+        content,
+        attachments);
     ReflectionTestUtils.setField(mockReview, "id", 10L);
 
     when(reviewRepository.save(any(ReviewAggregate.class)))

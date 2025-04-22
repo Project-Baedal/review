@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-18T20:05:41+0900",
+    date = "2025-04-22T12:20:05+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -22,7 +22,7 @@ public class StoreMapperImpl implements StoreMapper {
         Long id = null;
         String name = null;
 
-        id = response.id();
+        id = response.storeId();
         name = response.name();
 
         Store store = new Store( id, name );

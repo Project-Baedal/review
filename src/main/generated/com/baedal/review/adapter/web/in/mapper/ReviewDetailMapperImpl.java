@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-18T19:57:26+0900",
+    date = "2025-04-22T12:20:05+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -23,13 +23,13 @@ public class ReviewDetailMapperImpl implements ReviewDetailMapper {
             return null;
         }
 
-        Long reviewerId = null;
-        String nickname = null;
+        Long customerId = null;
+        String name = null;
 
-        reviewerId = customer.id();
-        nickname = customer.nickname();
+        customerId = customer.id();
+        name = customer.name();
 
-        ReviewDetail.ReviewerInfo reviewerInfo = new ReviewDetail.ReviewerInfo( reviewerId, nickname );
+        ReviewDetail.ReviewerInfo reviewerInfo = new ReviewDetail.ReviewerInfo( customerId, name );
 
         return reviewerInfo;
     }

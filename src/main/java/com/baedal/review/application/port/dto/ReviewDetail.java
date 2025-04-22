@@ -29,8 +29,8 @@ public class ReviewDetail {
   @AllArgsConstructor
   public static class ReviewerInfo {
 
-    private Long reviewerId;
-    private String nickname;
+    private Long customerId;
+    private String name;
   }
 
   @Getter

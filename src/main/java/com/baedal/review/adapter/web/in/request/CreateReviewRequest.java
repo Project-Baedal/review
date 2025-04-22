@@ -9,6 +9,6 @@ public record CreateReviewRequest(
     Long orderId,
     ReviewScore score,
     String content,
-    List<String> attchments) {
+    List<String> attachments) {
 
 }

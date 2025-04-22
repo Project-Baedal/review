@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-18T19:31:47+0900",
+    date = "2025-04-22T12:20:05+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -19,13 +19,13 @@ public class CustomerMapperImpl implements CustomerMapper {
             return null;
         }
 
+        String name = null;
+
+        name = response.name();
+
         Long id = null;
-        String nickname = null;
 
-        id = response.id();
-        nickname = response.nickname();
-
-        Customer customer = new Customer( id, nickname );
+        Customer customer = new Customer( id, name );
 
         return customer;
     }

@@ -24,7 +24,7 @@ public interface ReviewDetailMapper {
         .build();
   }
 
-  @Mapping(source = "id", target = "reviewerId")
+  @Mapping(source = "id", target = "customerId")
   ReviewDetail.ReviewerInfo toReviewerInfo(Customer customer);
 
   @Mapping(source = "id", target = "storeId")

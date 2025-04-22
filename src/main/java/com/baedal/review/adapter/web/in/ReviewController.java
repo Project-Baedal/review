@@ -36,7 +36,7 @@ public class ReviewController {
         request.orderId(),
         request.score(),
         request.content(),
-        request.attchments());
+        request.attachments());
 
     URI uri = ServletUriComponentsBuilder
         .fromCurrentRequest()
