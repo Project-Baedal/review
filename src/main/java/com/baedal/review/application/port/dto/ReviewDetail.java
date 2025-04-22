@@ -9,43 +9,47 @@ import lombok.Getter;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class ReviewDetail {
 
-  private Long reviewId;
+  private final Long reviewId;
 
-  private String content;
+  private final String content;
 
-  private ReviewScore reviewScore;
+  private final ReviewScore reviewScore;
 
-  private LocalDateTime createdAt;
+  private final LocalDateTime createdAt;
 
-  private ReviewerInfo reviewer;
+  private final ReviewerInfo reviewer;
 
-  private StoreInfo store;
+  private final StoreInfo store;
 
-  private List<AttachmentInfo> attachments;
+  private final List<AttachmentInfo> attachments;
 
   @Getter
+  @Builder
   @AllArgsConstructor
   public static class ReviewerInfo {
 
-    private Long customerId;
-    private String name;
+    private final Long customerId;
+    private final String name;
   }
 
   @Getter
+  @Builder
   @AllArgsConstructor
   public static class StoreInfo {
 
-    private Long storeId;
-    private String name;
+    private final Long storeId;
+    private final String name;
   }
 
   @Getter
+  @Builder
   @AllArgsConstructor
   public static class AttachmentInfo {
 
-    private Long attachmentId;
-    private String url;
+    private final Long attachmentId;
+    private final String url;
   }
 }
