@@ -1,4 +1,4 @@
-package com.baedal.review.adapter.web.in.mapper;
+package com.baedal.review.application.mapper;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.entity.ReviewAttachment;

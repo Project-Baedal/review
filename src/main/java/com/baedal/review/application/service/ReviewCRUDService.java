@@ -3,7 +3,7 @@ package com.baedal.review.application.service;
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.entity.ReviewScore;
 import com.baedal.review.adapter.persistence.repository.ReviewRepository;
-import com.baedal.review.adapter.web.in.mapper.ReviewDetailMapper;
+import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.in.ReviewCRUDUsecase;
 import com.baedal.review.application.port.out.CustomerPort;
