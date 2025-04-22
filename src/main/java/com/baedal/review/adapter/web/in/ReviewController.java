@@ -28,7 +28,7 @@ public class ReviewController {
     return ResponseEntity.ok(reviewDetail);
   }
 
-  @PostMapping()
+  @PostMapping
   public ResponseEntity<Void> createReview(@RequestBody CreateReviewRequest request) {
     Long reviewId = reviewCRUDUsecase.createReview(
         request.customerId(),
@@ -47,7 +47,7 @@ public class ReviewController {
     return ResponseEntity.created(uri).build();
   }
 
-  @DeleteMapping()
+  @DeleteMapping("/reviewId")
   public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
     reviewCRUDUsecase.deleteReview(reviewId);
     return ResponseEntity.noContent().build();
