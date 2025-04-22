@@ -1,5 +1,6 @@
 package com.baedal.review.adapter.web.out;
 
+import com.baedal.review.adapter.web.out.client.CustomerClient;
 import com.baedal.review.adapter.web.out.mapper.CustomerMapper;
 import com.baedal.review.adapter.web.out.response.GetCustomerResponse;
 import com.baedal.review.application.port.out.CustomerPort;
@@ -9,12 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MockCustomerAdapter implements CustomerPort {
+public class CustomerServiceAdapter implements CustomerPort {
 
   private final CustomerMapper mapper;
 
+  private final CustomerClient client;
+
   public Customer getCustomer(Long customerId) {
-    GetCustomerResponse response = new GetCustomerResponse(1L, "mockName");
+    GetCustomerResponse response = client.getCustomer(customerId);
     return mapper.toReviewer(response);
   }
 }

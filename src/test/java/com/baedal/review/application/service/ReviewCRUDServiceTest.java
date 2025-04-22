@@ -100,8 +100,8 @@ class ReviewCRUDServiceTest {
     ReflectionTestUtils.setField(review, "id", reviewId);
     ReflectionTestUtils.setField(review, "createdAt", LocalDateTime.now());
 
-    Customer customer = new Customer(1L, "nick"); // mock or stub your own
-    Store store = new Store(2L, "mick");         // mock or stub your own
+    Customer customer = new Customer(1L, "nick");
+    Store store = new Store(2L, "mick");
 
     when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
     when(customerPort.getCustomer(review.getReviewerId())).thenReturn(customer);
