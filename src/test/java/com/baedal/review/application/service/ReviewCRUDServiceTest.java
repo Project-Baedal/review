@@ -6,7 +6,6 @@ import com.baedal.review.adapter.persistence.repository.ReviewRepository;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.out.CustomerPort;
-import com.baedal.review.application.port.out.StorePort;
 import com.baedal.review.domain.model.Customer;
 import com.baedal.review.domain.model.Store;
 import java.time.LocalDateTime;
@@ -38,9 +37,6 @@ class ReviewCRUDServiceTest {
 
   @Mock
   private CustomerPort customerPort;
-
-  @Mock
-  private StorePort storePort;
 
   @Spy
   private ReviewDetailMapper reviewDetailMapper = Mappers.getMapper(ReviewDetailMapper.class);
@@ -105,7 +101,6 @@ class ReviewCRUDServiceTest {
 
     when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
     when(customerPort.getCustomer(review.getReviewerId())).thenReturn(customer);
-    when(storePort.getStore(review.getStoreId())).thenReturn(store);
 
     // when
     ReviewDetail result = reviewCRUDService.findReviewDetail(reviewId);
@@ -113,7 +108,6 @@ class ReviewCRUDServiceTest {
     // then
     verify(reviewRepository).findById(reviewId);
     verify(customerPort).getCustomer(review.getReviewerId());
-    verify(storePort).getStore(review.getStoreId());
   }
 
 }
