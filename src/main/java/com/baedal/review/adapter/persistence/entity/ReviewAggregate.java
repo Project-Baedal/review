@@ -8,18 +8,22 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewAggregate {
 
@@ -46,31 +50,11 @@ public class ReviewAggregate {
 
   @OneToMany(
       cascade = CascadeType.ALL,
-      orphanRemoval = true,
-      mappedBy = "review")
+      orphanRemoval = true)
+  @JoinColumn(name = "review_id")
   private List<ReviewAttachment> attachments = new ArrayList<>();
 
   public ReviewAggregate(Long id) {
     this.id = id;
   }
-
-  public static ReviewAggregate create(
-      Long customerId,
-      Long storeId,
-      Long orderId,
-      ReviewScore score,
-      String content,
-      List<String> attachmentUrls) {
-    ReviewAggregate review = new ReviewAggregate();
-    review.reviewerId = customerId;
-    review.storeId = storeId;
-    review.orderId = orderId;
-    review.score = score;
-    review.content = content;
-    review.attachments = attachmentUrls.stream()
-        .map(url -> new ReviewAttachment(review, url))
-        .toList();
-    return review;
-  }
-
 }
