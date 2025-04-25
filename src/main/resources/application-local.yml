@@ -6,3 +6,9 @@ services:
     url: http://localhost:8080
   store:
     url: http://localhost:8081
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379

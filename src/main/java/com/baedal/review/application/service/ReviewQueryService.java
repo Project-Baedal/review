@@ -10,6 +10,7 @@ import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +48,12 @@ public class ReviewQueryService {
         .toList();
   }
 
+  @Cacheable(
+      cacheNames = "storeAverageScore",
+      key = "#storeId",
+      unless = "#result==null"
+  )
   @Transactional(readOnly = true)
-  // TODO: Cache this result
   public Double findAverageScoreOfStore(Long storeId) {
     return reviewQueryPort.calculateAverageScore(storeId);
   }
