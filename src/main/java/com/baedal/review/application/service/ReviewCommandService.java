@@ -24,6 +24,7 @@ public class ReviewCommandService {
 
   @Transactional
   public void delete(Long reviewId) {
+    // TODO: 삭제 기능 권한 검증. customer 본인/ owner...
     ReviewAggregate entity = new ReviewAggregate(reviewId);
     commandPort.delete(entity);
   }

@@ -1,8 +1,8 @@
 package com.baedal.review.application.service;
 
-import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.mapper.ReviewSummaryMapper;
+import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.out.CustomerPort;
@@ -11,6 +11,7 @@ import com.baedal.review.domain.model.Customer;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +27,21 @@ public class ReviewQueryService {
 
   private final ReviewQueryPort reviewQueryPort;
 
-  // FIXME: 비동기 NIO 쓸 수 있으면 쓰자.
   @Transactional(readOnly = true)
-  public ReviewDetail findReviewDetail(Long reviewId) {
-    // FIXME: 연관 관계 조회 최적화.
-    ReviewAggregate reviewAggregate = reviewQueryPort.findById(reviewId);
+  public PagedResponse<ReviewDetail> findReviewDetailsPage(
+      Long storeId, Integer number, Integer size) {
+    Slice<ReviewDetail> result = reviewQueryPort.findByStoreId(storeId, number, size)
+        .map(review -> {
+          Customer customer = customerPort.getCustomer(review.getReviewerId());
+          return reviewDetailMapper.toReviewDetail(review, customer);
+        });
 
-    Customer customer = customerPort.getCustomer(reviewAggregate.getReviewerId());
-
-    return reviewDetailMapper.toReviewDetail(reviewAggregate, customer);
+    return PagedResponse.<ReviewDetail>builder()
+        .content(result.getContent())
+        .hasNext(result.hasNext())
+        .pageNumber(result.getNumber())
+        .size(result.getSize())
+        .build();
   }
 
   @Transactional(readOnly = true)

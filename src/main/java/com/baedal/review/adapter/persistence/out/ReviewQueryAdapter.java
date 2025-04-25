@@ -6,6 +6,8 @@ import com.baedal.review.adapter.persistence.repository.ReviewRepository;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,5 +28,9 @@ public class ReviewQueryAdapter implements ReviewQueryPort {
 
   public Double calculateAverageScore(Long storeId) {
     return repository.averageScoreOfStore(storeId);
+  }
+
+  public Slice<ReviewAggregate> findByStoreId(Long storeId, Integer number, Integer size) {
+    return repository.findByStoreId(storeId, PageRequest.of(number, size));
   }
 }
