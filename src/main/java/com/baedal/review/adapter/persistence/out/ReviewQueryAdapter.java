@@ -14,7 +14,6 @@ public class ReviewQueryAdapter implements ReviewQueryPort {
 
   private final ReviewRepository repository;
 
-  @Override
   public ReviewAggregate findById(Long reviewId) {
     return repository.findById(reviewId)
         .orElseThrow(() -> new RuntimeException("해당 Id로 리뷰를 찾을 수 없음"));
@@ -23,5 +22,9 @@ public class ReviewQueryAdapter implements ReviewQueryPort {
   public List<ReviewSummaryProjection> findTop10ReviewOfStore(Long storeId) {
     // TODO: 어떤 기준으로 10개 뽑을지?
     return repository.findTop10ByStoreIdOrderByIdDesc(storeId);
+  }
+
+  public Double calculateAverageScore(Long storeId) {
+    return repository.averageScoreOfStore(storeId);
   }
 }

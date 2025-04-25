@@ -1,6 +1,7 @@
 package com.baedal.review.adapter.web.in;
 
 import com.baedal.review.adapter.web.in.request.CreateReviewRequest;
+import com.baedal.review.adapter.web.in.response.GetAverageScoreResponse;
 import com.baedal.review.adapter.web.in.response.GetStoreTop10ReviewsResponse;
 import com.baedal.review.adapter.web.mapper.WebReviewMapper;
 import com.baedal.review.application.port.dto.CreateReviewCommand;
@@ -66,6 +67,13 @@ public class ReviewController {
         .data(summaries)
         .build();
 
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/{storeId}")
+  public ResponseEntity<GetAverageScoreResponse> getAverageScore(@PathVariable Long storeId) {
+    Double average = reviewQueryService.findAverageScoreOfStore(storeId);
+    GetAverageScoreResponse response = new GetAverageScoreResponse(average);
     return ResponseEntity.ok(response);
   }
 }

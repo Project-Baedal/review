@@ -11,4 +11,6 @@ public interface ReviewQueryPort {
   ReviewAggregate findById(Long reviewId);
 
   List<ReviewSummaryProjection> findTop10ReviewOfStore(Long storeId);
+
+  public Double calculateAverageScore(Long storeId);
 }

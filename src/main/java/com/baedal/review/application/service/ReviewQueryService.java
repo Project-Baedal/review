@@ -47,4 +47,9 @@ public class ReviewQueryService {
         .toList();
   }
 
+  @Transactional(readOnly = true)
+  // TODO: Cache this result
+  public Double findAverageScoreOfStore(Long storeId) {
+    return reviewQueryPort.calculateAverageScore(storeId);
+  }
 }
