@@ -2,9 +2,12 @@ package com.baedal.review.adapter.web.in;
 
 import com.baedal.review.adapter.web.in.request.CreateReviewRequest;
 import com.baedal.review.adapter.web.in.response.GetStoreTop10ReviewsResponse;
+import com.baedal.review.adapter.web.mapper.WebReviewMapper;
+import com.baedal.review.application.port.dto.CreateReviewCommand;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.dto.StoreReviewSummary;
-import com.baedal.review.application.port.in.ReviewCRUDUsecase;
+import com.baedal.review.application.service.ReviewCommandService;
+import com.baedal.review.application.service.ReviewQueryService;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,23 +26,22 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class ReviewController {
 
-  private final ReviewCRUDUsecase reviewCRUDUsecase;
+  private final ReviewCommandService commandService;
+
+  private final ReviewQueryService reviewQueryService;
+
+  private final WebReviewMapper mapper;
 
   @GetMapping("/{reviewId}")
   public ResponseEntity<ReviewDetail> getReview(@PathVariable("reviewId") Long id) {
-    ReviewDetail reviewDetail = reviewCRUDUsecase.findReviewDetail(id);
+    ReviewDetail reviewDetail = reviewQueryService.findReviewDetail(id);
     return ResponseEntity.ok(reviewDetail);
   }
 
   @PostMapping
   public ResponseEntity<Void> createReview(@RequestBody CreateReviewRequest request) {
-    Long reviewId = reviewCRUDUsecase.createReview(
-        request.customerId(),
-        request.storeId(),
-        request.orderId(),
-        request.score(),
-        request.content(),
-        request.attachments());
+    CreateReviewCommand.Request commandReq = mapper.toCommand(request);
+    Long reviewId = commandService.create(commandReq);
 
     URI uri = ServletUriComponentsBuilder
         .fromCurrentRequest()
@@ -52,14 +54,14 @@ public class ReviewController {
 
   @DeleteMapping("/{reviewId}")
   public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
-    reviewCRUDUsecase.deleteReview(reviewId);
+    commandService.delete(reviewId);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{storeId}/summary")
   public ResponseEntity<GetStoreTop10ReviewsResponse> getStoreTop10Reviews(
       @PathVariable("storeId") Long storeId) {
-    List<StoreReviewSummary> summaries = reviewCRUDUsecase.findTop10ReviewSummary(storeId);
+    List<StoreReviewSummary> summaries = reviewQueryService.findTop10ReviewSummary(storeId);
     GetStoreTop10ReviewsResponse response = GetStoreTop10ReviewsResponse.builder()
         .data(summaries)
         .build();
