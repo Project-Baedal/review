@@ -4,7 +4,9 @@ import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.entity.ReviewScore;
 import com.baedal.review.adapter.persistence.repository.ReviewRepository;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
+import com.baedal.review.application.mapper.ReviewSummaryMapper;
 import com.baedal.review.application.port.dto.ReviewDetail;
+import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.in.ReviewCRUDUsecase;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.domain.model.Customer;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewCRUDService implements ReviewCRUDUsecase {
 
   private final ReviewDetailMapper reviewDetailMapper;
+
+  private final ReviewSummaryMapper reviewSummaryMapper;
 
   private final CustomerPort customerPort;
 
@@ -62,4 +66,17 @@ public class ReviewCRUDService implements ReviewCRUDUsecase {
             attachments));
     return review.getId();
   }
+
+  @Transactional(readOnly = true)
+  public List<StoreReviewSummary> findTop10ReviewSummary(Long storeId) {
+    // TODO: 어떤 기준으로 10개 뽑을지?
+    return reviewRepository.findTop10ByStoreIdOrderByIdDesc(storeId)
+        .parallelStream()
+        .map(proj -> {
+          Customer customer = customerPort.getCustomer(proj.getReviewerId());
+          return reviewSummaryMapper.toDto(proj, customer);
+        })
+        .toList();
+  }
+
 }

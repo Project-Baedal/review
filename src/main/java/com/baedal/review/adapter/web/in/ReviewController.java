@@ -1,9 +1,12 @@
 package com.baedal.review.adapter.web.in;
 
 import com.baedal.review.adapter.web.in.request.CreateReviewRequest;
+import com.baedal.review.adapter.web.in.response.GetStoreTop10ReviewsResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
+import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.in.ReviewCRUDUsecase;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,5 +54,16 @@ public class ReviewController {
   public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
     reviewCRUDUsecase.deleteReview(reviewId);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{storeId}/summary")
+  public ResponseEntity<GetStoreTop10ReviewsResponse> getStoreTop10Reviews(
+      @PathVariable("storeId") Long storeId) {
+    List<StoreReviewSummary> summaries = reviewCRUDUsecase.findTop10ReviewSummary(storeId);
+    GetStoreTop10ReviewsResponse response = GetStoreTop10ReviewsResponse.builder()
+        .data(summaries)
+        .build();
+
+    return ResponseEntity.ok(response);
   }
 }
