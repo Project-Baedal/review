@@ -1,6 +1,7 @@
 package com.baedal.review.adapter.web.mapper;
 
 import com.baedal.review.adapter.web.in.request.CreateReviewRequest;
+import com.baedal.review.adapter.web.in.response.GetAverageScoreResponse;
 import com.baedal.review.application.port.dto.CreateReviewCommand;
 import org.mapstruct.Mapper;
 
@@ -8,4 +9,6 @@ import org.mapstruct.Mapper;
 public interface WebReviewMapper {
 
   CreateReviewCommand.Request toCommand(CreateReviewRequest r);
+
+  GetAverageScoreResponse toResponse(Double average);
 }

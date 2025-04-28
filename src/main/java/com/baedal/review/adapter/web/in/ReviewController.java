@@ -69,7 +69,7 @@ public class ReviewController {
   @GetMapping("/{storeId}/average-score")
   public ResponseEntity<GetAverageScoreResponse> getAverageScore(@PathVariable Long storeId) {
     Double average = reviewQueryService.findAverageScoreOfStore(storeId);
-    GetAverageScoreResponse response = new GetAverageScoreResponse(average);
+    GetAverageScoreResponse response = mapper.toResponse(average);
     return ResponseEntity.ok(response);
   }
 
@@ -79,7 +79,7 @@ public class ReviewController {
       @RequestParam(defaultValue = "0") Integer pageNumber,
       @RequestParam(defaultValue = "10") Integer size) {
     size = Integer.max(size, 10);
-    
+
     PagedResponse<ReviewDetail> response = reviewQueryService
         .findReviewDetailsPage(storeId, pageNumber, size);
     return ResponseEntity.ok(response);
