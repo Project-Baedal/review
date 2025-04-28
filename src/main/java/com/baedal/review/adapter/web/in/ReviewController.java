@@ -78,6 +78,8 @@ public class ReviewController {
       @PathVariable Long storeId,
       @RequestParam(defaultValue = "0") Integer pageNumber,
       @RequestParam(defaultValue = "10") Integer size) {
+    size = Integer.max(size, 10);
+    
     PagedResponse<ReviewDetail> response = reviewQueryService
         .findReviewDetailsPage(storeId, pageNumber, size);
     return ResponseEntity.ok(response);
