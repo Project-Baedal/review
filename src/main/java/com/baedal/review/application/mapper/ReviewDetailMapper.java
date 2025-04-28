@@ -2,6 +2,7 @@ package com.baedal.review.application.mapper;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.entity.ReviewAttachment;
+import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.domain.model.Customer;
 import java.util.List;
@@ -29,4 +30,11 @@ public interface ReviewDetailMapper {
   ReviewDetail.AttachmentInfo toAttachmentInfo(ReviewAttachment attachment);
 
   List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<ReviewAttachment> list);
+
+  @Mapping(target = "content", source = "data")
+  PagedResponse<ReviewDetail> toPagedResponse(
+      List<ReviewDetail> data,
+      Boolean hasNext,
+      Integer pageNumber,
+      Integer size);
 }

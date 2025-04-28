@@ -1,5 +1,6 @@
 package com.baedal.review.application.service;
 
+import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.mapper.ReviewSummaryMapper;
 import com.baedal.review.application.port.dto.PagedResponse;
@@ -30,18 +31,21 @@ public class ReviewQueryService {
   @Transactional(readOnly = true)
   public PagedResponse<ReviewDetail> findReviewDetailsPage(
       Long storeId, Integer number, Integer size) {
-    Slice<ReviewDetail> result = reviewQueryPort.findByStoreId(storeId, number, size)
+    Slice<ReviewAggregate> slice = reviewQueryPort.findByStoreId(storeId, number, size);
+
+    List<ReviewDetail> data = slice
+        .stream().parallel()
         .map(review -> {
           Customer customer = customerPort.getCustomer(review.getReviewerId());
           return reviewDetailMapper.toReviewDetail(review, customer);
-        });
+        })
+        .toList();
 
-    return PagedResponse.<ReviewDetail>builder()
-        .content(result.getContent())
-        .hasNext(result.hasNext())
-        .pageNumber(result.getNumber())
-        .size(result.getSize())
-        .build();
+    return reviewDetailMapper.toPagedResponse(
+        data,
+        slice.hasNext(),
+        slice.getNumber(),
+        slice.getSize());
   }
 
   @Transactional(readOnly = true)
