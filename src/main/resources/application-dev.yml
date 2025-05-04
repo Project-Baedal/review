@@ -1,8 +1,8 @@
 services:
   customer:
-    url: http://localhost:8088/api/customer
+    url: http://customer:8088/api/customer
   store:
-    url: http://localhost:8081/api/store
+    url: http://store:8081/api/store
 
 spring:
   data:

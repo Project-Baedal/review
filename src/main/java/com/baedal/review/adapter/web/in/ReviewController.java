@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/v0")
+@RequestMapping("/api/review/v0")
 @RequiredArgsConstructor
 public class ReviewController {
 
