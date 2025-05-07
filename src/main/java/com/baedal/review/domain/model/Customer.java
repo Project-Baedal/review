@@ -1,8 +1,12 @@
 package com.baedal.review.domain.model;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
-public record Customer(Long id, String name) {
+public class Customer {
 
+  private Long id;
+  private String name;
 }

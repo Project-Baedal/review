@@ -9,6 +9,8 @@ import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,10 +35,23 @@ public class ReviewQueryService {
       Long storeId, Integer number, Integer size) {
     Slice<ReviewAggregate> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
+    // Extract Review's IDs
+    List<Long> ids = slice.stream().parallel()
+        .map(ReviewAggregate::getReviewerId)
+        .toList();
+
+    Collection<Customer> customers = customerPort.getCustomersByIds(ids);
+
+    // Mapping Reviewer
+    HashMap<Long, Customer> customerMap = new HashMap<>();
+    for (Customer customer : customers) {
+      customerMap.put(customer.getId(), customer);
+    }
+
     List<ReviewDetail> data = slice
         .stream().parallel()
         .map(review -> {
-          Customer customer = customerPort.getCustomer(review.getReviewerId());
+          Customer customer = customerMap.get(review.getReviewerId());
           return reviewDetailMapper.toReviewDetail(review, customer);
         })
         .toList();

@@ -26,9 +26,10 @@ public interface ReviewDetailMapper {
   @Mapping(source = "id", target = "customerId")
   ReviewDetail.ReviewerInfo toReviewerInfo(Customer customer);
 
-  @Mapping(source = "id", target = "attachmentId")
+  @Mapping(target = "attachmentId", source = "id")
   ReviewDetail.AttachmentInfo toAttachmentInfo(ReviewAttachment attachment);
 
+  @Mapping(target = "attachmentId", source = "list.id")
   List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<ReviewAttachment> list);
 
   @Mapping(target = "content", source = "data")
