@@ -81,7 +81,7 @@ public class ReviewController {
     size = Integer.max(size, 10);
 
     PagedResponse<ReviewDetail> response = reviewQueryService
-        .findReviewDetailsPage(storeId, pageNumber, size);
+        .findReviewDetailsByStore(storeId, pageNumber, size);
     return ResponseEntity.ok(response);
   }
 }

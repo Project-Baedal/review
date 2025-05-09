@@ -31,16 +31,15 @@ public class ReviewQueryService {
   private final ReviewQueryPort reviewQueryPort;
 
   @Transactional(readOnly = true)
-  public PagedResponse<ReviewDetail> findReviewDetailsPage(
+  public PagedResponse<ReviewDetail> findReviewDetailsByStore(
       Long storeId, Integer number, Integer size) {
     Slice<ReviewAggregate> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
-    // Extract Review's IDs
-    List<Long> ids = slice.stream().parallel()
-        .map(ReviewAggregate::getReviewerId)
-        .toList();
-
-    Collection<Customer> customers = customerPort.getCustomersByIds(ids);
+    // Extract Review's IDs And Get Customers
+    Collection<Customer> customers = customerPort.getCustomersByIds(
+        slice.stream().parallel()
+            .map(ReviewAggregate::getReviewerId)
+            .toList());
 
     // Mapping Reviewer
     HashMap<Long, Customer> customerMap = new HashMap<>();
@@ -48,6 +47,7 @@ public class ReviewQueryService {
       customerMap.put(customer.getId(), customer);
     }
 
+    // Entity to DTO
     List<ReviewDetail> data = slice
         .stream().parallel()
         .map(review -> {

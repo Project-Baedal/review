@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PagedResponse<T> {
 
-  private List<T> content;
+  private List<T> data;
 
   private boolean hasNext;
 
