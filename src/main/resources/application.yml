@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: review
+
+  output:
+    ansi:
+      enabled: always
+
+server:
+  port: 8086

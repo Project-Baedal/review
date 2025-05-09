@@ -1,0 +1,11 @@
+services:
+  customer:
+    url: http://customer:8088/api/customer
+  store:
+    url: http://store:8081/api/store
+
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
