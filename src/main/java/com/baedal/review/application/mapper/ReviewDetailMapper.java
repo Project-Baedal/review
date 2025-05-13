@@ -32,7 +32,6 @@ public interface ReviewDetailMapper {
   @Mapping(target = "attachmentId", source = "list.id")
   List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<ReviewAttachment> list);
 
-  @Mapping(target = "content", source = "data")
   PagedResponse<ReviewDetail> toPagedResponse(
       List<ReviewDetail> data,
       Boolean hasNext,

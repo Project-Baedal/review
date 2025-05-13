@@ -12,6 +12,8 @@ import com.baedal.review.domain.model.Customer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Slice;
@@ -35,25 +37,17 @@ public class ReviewQueryService {
       Long storeId, Integer number, Integer size) {
     Slice<ReviewAggregate> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
-    // Extract Review's IDs And Get Customers
-    Collection<Customer> customers = customerPort.getCustomersByIds(
-        slice.stream().parallel()
-            .map(ReviewAggregate::getReviewerId)
-            .toList());
+    // Fetch Customers' IDs
+    List<Long> customerIds = slice.stream().parallel()
+        .map(ReviewAggregate::getReviewerId)
+        .toList();
 
-    // Mapping Reviewer
-    HashMap<Long, Customer> customerMap = new HashMap<>();
-    for (Customer customer : customers) {
-      customerMap.put(customer.getId(), customer);
-    }
+    // Mapping id-customer
+    Map<Long, Customer> customerMap = makeCustomerMap(customerIds);
 
-    // Entity to DTO
-    List<ReviewDetail> data = slice
-        .stream().parallel()
-        .map(review -> {
-          Customer customer = customerMap.get(review.getReviewerId());
-          return reviewDetailMapper.toReviewDetail(review, customer);
-        })
+    // Entity to DTO with Map
+    List<ReviewDetail> data = slice.stream().parallel()
+        .map(mapCustomerToReviewDetail(customerMap))
         .toList();
 
     return reviewDetailMapper.toPagedResponse(
@@ -61,6 +55,24 @@ public class ReviewQueryService {
         slice.hasNext(),
         slice.getNumber(),
         slice.getSize());
+  }
+
+  private Function<ReviewAggregate, ReviewDetail> mapCustomerToReviewDetail(
+      Map<Long, Customer> customerMap) {
+    return review -> reviewDetailMapper.toReviewDetail(
+        review,
+        customerMap.get(review.getReviewerId())
+    );
+  }
+
+  private Map<Long, Customer> makeCustomerMap(List<Long> customerIds) {
+    Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
+
+    HashMap<Long, Customer> customerMap = new HashMap<>();
+    for (Customer customer : customers) {
+      customerMap.put(customer.getId(), customer);
+    }
+    return customerMap;
   }
 
   @Transactional(readOnly = true)
