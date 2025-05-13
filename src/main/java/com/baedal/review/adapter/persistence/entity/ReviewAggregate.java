@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +21,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewAggregate {
 
@@ -56,5 +53,18 @@ public class ReviewAggregate {
 
   public ReviewAggregate(Long id) {
     this.id = id;
+  }
+
+  @Builder
+  public ReviewAggregate(Long id, Long reviewerId, Long storeId, Long orderId, ReviewScore score,
+      LocalDateTime createdAt, String content, List<ReviewAttachment> attachments) {
+    this.id = id;
+    this.reviewerId = reviewerId;
+    this.storeId = storeId;
+    this.orderId = orderId;
+    this.score = score;
+    this.createdAt = createdAt;
+    this.content = content;
+    this.attachments = attachments;
   }
 }

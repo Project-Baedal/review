@@ -59,10 +59,7 @@ public class ReviewController {
   public ResponseEntity<GetStoreTop10ReviewsResponse> getStoreTop10Reviews(
       @PathVariable("storeId") Long storeId) {
     List<StoreReviewSummary> summaries = reviewQueryService.findTop10ReviewSummary(storeId);
-    GetStoreTop10ReviewsResponse response = GetStoreTop10ReviewsResponse.builder()
-        .data(summaries)
-        .build();
-
+    GetStoreTop10ReviewsResponse response = mapper.toResponse(summaries);
     return ResponseEntity.ok(response);
   }
 
