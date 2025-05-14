@@ -1,6 +1,7 @@
 package com.baedal.review.application.service;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
+import com.baedal.review.adapter.persistence.projection.ReviewSummaryProjection;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.mapper.ReviewSummaryMapper;
 import com.baedal.review.application.port.dto.PagedResponse;
@@ -13,7 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Slice;
@@ -47,7 +47,10 @@ public class ReviewQueryService {
 
     // Entity to DTO with Map
     List<ReviewDetail> data = slice.stream().parallel()
-        .map(mapCustomerToReviewDetail(customerMap))
+        .map(review -> reviewDetailMapper.toReviewDetail(
+            review,
+            customerMap.get(review.getReviewerId())))
+        .sorted()
         .toList();
 
     return reviewDetailMapper.toPagedResponse(
@@ -55,14 +58,6 @@ public class ReviewQueryService {
         slice.hasNext(),
         slice.getNumber(),
         slice.getSize());
-  }
-
-  private Function<ReviewAggregate, ReviewDetail> mapCustomerToReviewDetail(
-      Map<Long, Customer> customerMap) {
-    return review -> reviewDetailMapper.toReviewDetail(
-        review,
-        customerMap.get(review.getReviewerId())
-    );
   }
 
   private Map<Long, Customer> makeCustomerMap(List<Long> customerIds) {
@@ -77,12 +72,22 @@ public class ReviewQueryService {
 
   @Transactional(readOnly = true)
   public List<StoreReviewSummary> findTop10ReviewSummary(Long storeId) {
-    return reviewQueryPort.findTop10ReviewOfStore(storeId)
-        .parallelStream()
-        .map(proj -> {
-          Customer customer = customerPort.getCustomer(proj.getReviewerId());
-          return reviewSummaryMapper.toDto(proj, customer);
-        })
+    List<ReviewSummaryProjection> reviewSummaries = reviewQueryPort.findTop10ReviewOfStore(storeId);
+
+    // Fetch Customers' IDs
+    List<Long> customerIds = reviewSummaries.stream().parallel()
+        .map(ReviewSummaryProjection::getReviewerId)
+        .toList();
+
+    // Mapping id-customer
+    Map<Long, Customer> customerMap = makeCustomerMap(customerIds);
+
+    return reviewSummaries.parallelStream()
+        .map(review -> reviewSummaryMapper.toDto(
+            review,
+            customerMap.get(review.getReviewerId()))
+        )
+        .sorted()
         .toList();
   }
 

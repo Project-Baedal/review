@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ReviewDetail {
+public class ReviewDetail implements Comparable<ReviewDetail> {
 
   private final Long reviewId;
 
@@ -27,6 +27,7 @@ public class ReviewDetail {
   public static class ReviewerInfo {
 
     private final Long customerId;
+
     private final String name;
   }
 
@@ -35,6 +36,15 @@ public class ReviewDetail {
   public static class AttachmentInfo {
 
     private final Long attachmentId;
+
     private final String url;
+  }
+
+  @Override
+  public int compareTo(ReviewDetail o) {
+    if (o == null) {
+      return 1;
+    }
+    return o.getReviewId().compareTo(this.getReviewId());
   }
 }
