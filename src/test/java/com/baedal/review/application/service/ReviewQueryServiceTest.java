@@ -7,6 +7,7 @@ import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.DomainSlice;
 import com.baedal.review.domain.model.Review;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,12 @@ class ReviewQueryServiceTest {
     when(review2.getReviewerId()).thenReturn(102L);
 
     List<Review> reviewList = List.of(review1, review2);
-    Slice<Review> slice = new SliceImpl<>(reviewList, PageRequest.of(page, size), true);
+    DomainSlice<Review> slice = DomainSlice.<Review>builder()
+        .content(reviewList)
+        .hasNext(true)
+        .number(page)
+        .size(size)
+        .build();
 
     when(reviewQueryPort.findByStoreId(storeId, page, size)).thenReturn(slice);
 

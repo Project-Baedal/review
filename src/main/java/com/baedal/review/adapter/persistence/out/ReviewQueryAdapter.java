@@ -2,9 +2,9 @@ package com.baedal.review.adapter.persistence.out;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.mapper.ReviewPersistenceMapper;
-import com.baedal.review.adapter.persistence.projection.ReviewSummaryProjection;
 import com.baedal.review.adapter.persistence.repository.ReviewRepository;
 import com.baedal.review.application.port.out.ReviewQueryPort;
+import com.baedal.review.domain.model.DomainSlice;
 import com.baedal.review.domain.model.Review;
 import com.baedal.review.domain.model.ReviewSummary;
 import java.util.List;
@@ -38,8 +38,8 @@ public class ReviewQueryAdapter implements ReviewQueryPort {
     return repository.averageScoreOfStore(storeId);
   }
 
-  public Slice<Review> findByStoreId(Long storeId, Integer number, Integer size) {
+  public DomainSlice<Review> findByStoreId(Long storeId, Integer number, Integer size) {
     Slice<ReviewAggregate> slice = repository.findByStoreId(storeId, PageRequest.of(number, size));
-    return slice.map(mapper::toDomain);
+    return mapper.toDomain(slice);
   }
 }

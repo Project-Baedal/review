@@ -2,6 +2,7 @@ package com.baedal.review.application.port.out;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.projection.ReviewSummaryProjection;
+import com.baedal.review.domain.model.DomainSlice;
 import com.baedal.review.domain.model.Review;
 import com.baedal.review.domain.model.ReviewSummary;
 import java.util.List;
@@ -17,5 +18,5 @@ public interface ReviewQueryPort {
 
   Double calculateAverageScore(Long storeId);
 
-  Slice<Review> findByStoreId(Long storeId, Integer number, Integer size);
+  DomainSlice<Review> findByStoreId(Long storeId, Integer number, Integer size);
 }

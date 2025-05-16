@@ -1,7 +1,5 @@
 package com.baedal.review.application.service;
 
-import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.projection.ReviewSummaryProjection;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.mapper.ReviewSummaryMapper;
 import com.baedal.review.application.port.dto.PagedResponse;
@@ -10,6 +8,7 @@ import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.DomainSlice;
 import com.baedal.review.domain.model.Review;
 import com.baedal.review.domain.model.ReviewSummary;
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class ReviewQueryService {
   @Transactional(readOnly = true)
   public PagedResponse<ReviewDetail> findReviewDetailsByStore(
       Long storeId, Integer number, Integer size) {
-    Slice<Review> slice = reviewQueryPort.findByStoreId(storeId, number, size);
+    DomainSlice<Review> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
     // Fetch Customers' IDs
     List<Long> customerIds = slice.stream().parallel()
