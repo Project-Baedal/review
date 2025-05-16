@@ -1,7 +1,7 @@
 package com.baedal.review.application.service;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import com.baedal.review.application.mapper.ReviewEntityMapper;
 import com.baedal.review.application.port.dto.CreateReviewCommand;
 import com.baedal.review.application.port.dto.CreateReviewCommand.Request;

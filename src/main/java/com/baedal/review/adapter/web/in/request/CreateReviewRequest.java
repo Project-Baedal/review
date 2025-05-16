@@ -1,6 +1,6 @@
 package com.baedal.review.adapter.web.in.request;
 
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import java.util.List;
 
 public record CreateReviewRequest(

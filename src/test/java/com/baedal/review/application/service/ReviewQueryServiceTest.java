@@ -7,6 +7,7 @@ import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.Review;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,14 +46,14 @@ class ReviewQueryServiceTest {
     int size = 2;
 
     // Mock review aggregates
-    ReviewAggregate review1 = mock(ReviewAggregate.class);
-    ReviewAggregate review2 = mock(ReviewAggregate.class);
+    Review review1 = mock(Review.class);
+    Review review2 = mock(Review.class);
 
     when(review1.getReviewerId()).thenReturn(101L);
     when(review2.getReviewerId()).thenReturn(102L);
 
-    List<ReviewAggregate> reviewList = List.of(review1, review2);
-    Slice<ReviewAggregate> slice = new SliceImpl<>(reviewList, PageRequest.of(page, size), true);
+    List<Review> reviewList = List.of(review1, review2);
+    Slice<Review> slice = new SliceImpl<>(reviewList, PageRequest.of(page, size), true);
 
     when(reviewQueryPort.findByStoreId(storeId, page, size)).thenReturn(slice);
 
@@ -92,5 +93,4 @@ class ReviewQueryServiceTest {
     verify(reviewDetailMapper).toReviewDetail(review2, customer2);
     verify(reviewDetailMapper).toPagedResponse(mappedList, true, page, size);
   }
-
 }

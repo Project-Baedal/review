@@ -10,6 +10,8 @@ import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.Review;
+import com.baedal.review.domain.model.ReviewSummary;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +37,11 @@ public class ReviewQueryService {
   @Transactional(readOnly = true)
   public PagedResponse<ReviewDetail> findReviewDetailsByStore(
       Long storeId, Integer number, Integer size) {
-    Slice<ReviewAggregate> slice = reviewQueryPort.findByStoreId(storeId, number, size);
+    Slice<Review> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
     // Fetch Customers' IDs
     List<Long> customerIds = slice.stream().parallel()
-        .map(ReviewAggregate::getReviewerId)
+        .map(Review::getReviewerId)
         .toList();
 
     // Mapping id-customer
@@ -47,9 +49,9 @@ public class ReviewQueryService {
 
     // Entity to DTO with Map
     List<ReviewDetail> data = slice.stream().parallel()
-        .map(review -> reviewDetailMapper.toReviewDetail(
-            review,
-            customerMap.get(review.getReviewerId())))
+        .map(r -> reviewDetailMapper.toReviewDetail(
+            r,
+            customerMap.get(r.getReviewerId())))
         .sorted()
         .toList();
 
@@ -72,11 +74,11 @@ public class ReviewQueryService {
 
   @Transactional(readOnly = true)
   public List<StoreReviewSummary> findTop10ReviewSummary(Long storeId) {
-    List<ReviewSummaryProjection> reviewSummaries = reviewQueryPort.findTop10ReviewOfStore(storeId);
+    List<ReviewSummary> reviewSummaries = reviewQueryPort.findTop10ReviewOfStore(storeId);
 
     // Fetch Customers' IDs
     List<Long> customerIds = reviewSummaries.stream().parallel()
-        .map(ReviewSummaryProjection::getReviewerId)
+        .map(ReviewSummary::getReviewerId)
         .toList();
 
     // Mapping id-customer

@@ -21,6 +21,7 @@ public class StoreReviewSummary {
   public static class Reviewer {
 
     private final Long customerId;
+
     private final String name;
   }
 }

@@ -1,7 +1,7 @@
 package com.baedal.review.application.mapper;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.entity.ReviewAttachment;
+import com.baedal.review.adapter.persistence.entity.ReviewAttachmentEntity;
 import com.baedal.review.application.port.dto.CreateReviewCommand;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -16,9 +16,9 @@ public interface ReviewEntityMapper {
   @Mapping(target = "attachments", source = "r.attachments")
   ReviewAggregate toEntity(CreateReviewCommand.Request r);
 
-  default List<ReviewAttachment> toEntity(List<String> urls) {
+  default List<ReviewAttachmentEntity> toEntity(List<String> urls) {
     return urls.stream()
-        .map(str -> ReviewAttachment.builder()
+        .map(str -> ReviewAttachmentEntity.builder()
             .url(str)
             .build())
         .toList();

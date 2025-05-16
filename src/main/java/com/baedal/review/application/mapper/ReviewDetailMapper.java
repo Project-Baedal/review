@@ -1,10 +1,11 @@
 package com.baedal.review.application.mapper;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.entity.ReviewAttachment;
+import com.baedal.review.adapter.persistence.entity.ReviewAttachmentEntity;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.Review;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +13,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ReviewDetailMapper {
 
-  default ReviewDetail toReviewDetail(ReviewAggregate review, Customer customer) {
+  default ReviewDetail toReviewDetail(Review review, Customer customer) {
     return ReviewDetail.builder()
         .reviewId(review.getId())
         .content(review.getContent())
@@ -27,10 +28,10 @@ public interface ReviewDetailMapper {
   ReviewDetail.ReviewerInfo toReviewerInfo(Customer customer);
 
   @Mapping(target = "attachmentId", source = "id")
-  ReviewDetail.AttachmentInfo toAttachmentInfo(ReviewAttachment attachment);
+  ReviewDetail.AttachmentInfo toAttachmentInfo(Review.ReviewAttachment attachment);
 
   @Mapping(target = "attachmentId", source = "list.id")
-  List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<ReviewAttachment> list);
+  List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<Review.ReviewAttachment> list);
 
   PagedResponse<ReviewDetail> toPagedResponse(
       List<ReviewDetail> data,
