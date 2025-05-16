@@ -1,12 +1,11 @@
 package com.baedal.review.application.mapper;
 
-import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.entity.ReviewAttachmentEntity;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.domain.model.Customer;
 import com.baedal.review.domain.model.Review;
 import java.util.List;
+import java.util.Map;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -32,6 +31,14 @@ public interface ReviewDetailMapper {
 
   @Mapping(target = "attachmentId", source = "list.id")
   List<ReviewDetail.AttachmentInfo> toAttachmentInfoList(List<Review.ReviewAttachment> list);
+
+  default List<ReviewDetail> toReviewDetailList(
+      List<Review> reviews,
+      Map<Long, Customer> customers) {
+    return reviews.stream()
+        .map(review -> toReviewDetail(review, customers.get(review.getReviewerId())))
+        .toList();
+  }
 
   PagedResponse<ReviewDetail> toPagedResponse(
       List<ReviewDetail> data,

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,20 +38,20 @@ public class ReviewQueryService {
     DomainSlice<Review> slice = reviewQueryPort.findByStoreId(storeId, number, size);
 
     // Fetch Customers' IDs
-    List<Long> customerIds = slice.stream().parallel()
+    List<Long> customerIds = slice.stream()
         .map(Review::getReviewerId)
         .toList();
 
+    // Fetch All Customers
+    Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
+
     // Mapping id-customer
-    Map<Long, Customer> customerMap = makeCustomerMap(customerIds);
+    Map<Long, Customer> customerMap = makeCustomerMap(customers);
 
     // Entity to DTO with Map
-    List<ReviewDetail> data = slice.stream().parallel()
-        .map(r -> reviewDetailMapper.toReviewDetail(
-            r,
-            customerMap.get(r.getReviewerId())))
-        .sorted()
-        .toList();
+    List<ReviewDetail> data = reviewDetailMapper.toReviewDetailList(
+        slice.getContent(),
+        customerMap);
 
     return reviewDetailMapper.toPagedResponse(
         data,
@@ -61,9 +60,7 @@ public class ReviewQueryService {
         slice.getSize());
   }
 
-  private Map<Long, Customer> makeCustomerMap(List<Long> customerIds) {
-    Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
-
+  private Map<Long, Customer> makeCustomerMap(Collection<Customer> customers) {
     HashMap<Long, Customer> customerMap = new HashMap<>();
     for (Customer customer : customers) {
       customerMap.put(customer.getId(), customer);
@@ -76,20 +73,17 @@ public class ReviewQueryService {
     List<ReviewSummary> reviewSummaries = reviewQueryPort.findTop10ReviewOfStore(storeId);
 
     // Fetch Customers' IDs
-    List<Long> customerIds = reviewSummaries.stream().parallel()
+    List<Long> customerIds = reviewSummaries.stream()
         .map(ReviewSummary::getReviewerId)
         .toList();
 
-    // Mapping id-customer
-    Map<Long, Customer> customerMap = makeCustomerMap(customerIds);
+    // Fetch All Customers
+    Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
 
-    return reviewSummaries.parallelStream()
-        .map(review -> reviewSummaryMapper.toDto(
-            review,
-            customerMap.get(review.getReviewerId()))
-        )
-        .sorted()
-        .toList();
+    // Mapping id-customer
+    Map<Long, Customer> customerMap = makeCustomerMap(customers);
+
+    return reviewSummaryMapper.toReviewSummaryList(reviewSummaries, customerMap);
   }
 
   @Cacheable(
