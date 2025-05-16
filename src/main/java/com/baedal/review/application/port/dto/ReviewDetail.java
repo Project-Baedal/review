@@ -1,6 +1,6 @@
 package com.baedal.review.application.port.dto;
 
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;

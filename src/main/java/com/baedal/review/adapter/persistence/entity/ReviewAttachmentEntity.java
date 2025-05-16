@@ -6,17 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewAttachment {
+public class ReviewAttachmentEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,4 +21,9 @@ public class ReviewAttachment {
 
   @Column(nullable = false)
   private String url;
+
+  @Builder
+  public ReviewAttachmentEntity(String url) {
+    this.url = url;
+  }
 }

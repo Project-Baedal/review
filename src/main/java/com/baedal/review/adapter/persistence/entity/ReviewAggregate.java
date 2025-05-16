@@ -1,6 +1,7 @@
 package com.baedal.review.adapter.persistence.entity;
 
 import com.baedal.review.adapter.persistence.converter.ReviewScoreConverter;
+import com.baedal.review.domain.model.ReviewScore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -50,7 +51,7 @@ public class ReviewAggregate {
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   @JoinColumn(name = "review_id")
-  private List<ReviewAttachment> attachments = new ArrayList<>();
+  private List<ReviewAttachmentEntity> attachments = new ArrayList<>();
 
   public ReviewAggregate(Long id) {
     this.id = id;
@@ -58,7 +59,7 @@ public class ReviewAggregate {
 
   @Builder
   public ReviewAggregate(Long id, Long reviewerId, Long storeId, Long orderId, ReviewScore score,
-      LocalDateTime createdAt, String content, List<ReviewAttachment> attachments) {
+      LocalDateTime createdAt, String content, List<ReviewAttachmentEntity> attachments) {
     this.id = id;
     this.reviewerId = reviewerId;
     this.storeId = storeId;

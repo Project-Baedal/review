@@ -1,4 +1,4 @@
-package com.baedal.review.adapter.persistence.entity;
+package com.baedal.review.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

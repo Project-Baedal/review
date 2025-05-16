@@ -1,6 +1,6 @@
 package com.baedal.review.adapter.persistence.converter;
 
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

@@ -1,6 +1,6 @@
 package com.baedal.review.adapter.persistence.projection;
 
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 
 public interface ReviewSummaryProjection extends Comparable<ReviewSummaryProjection> {
 
