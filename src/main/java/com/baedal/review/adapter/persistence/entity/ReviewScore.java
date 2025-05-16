@@ -14,4 +14,13 @@ public enum ReviewScore {
   FIVE(5);
 
   private final Integer value;
+
+  public static ReviewScore fromValue(Integer value) {
+    for (ReviewScore score : values()) {
+      if (score.getValue().equals(value)) {
+        return score;
+      }
+    }
+    throw new IllegalArgumentException("Invalid score value: " + value);
+  }
 }

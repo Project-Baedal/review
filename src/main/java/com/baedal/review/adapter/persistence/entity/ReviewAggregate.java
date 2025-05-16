@@ -1,10 +1,10 @@
 package com.baedal.review.adapter.persistence.entity;
 
+import com.baedal.review.adapter.persistence.converter.ReviewScoreConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +28,7 @@ public class ReviewAggregate {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Column(nullable = false)
   private Long reviewerId;
 
   @Column(nullable = false)
@@ -37,7 +38,7 @@ public class ReviewAggregate {
   private Long orderId;
 
   @Column(nullable = false)
-  @Enumerated(EnumType.ORDINAL)
+  @Convert(converter = ReviewScoreConverter.class)
   private ReviewScore score;
 
   @CreationTimestamp
