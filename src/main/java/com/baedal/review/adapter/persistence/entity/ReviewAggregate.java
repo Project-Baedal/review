@@ -1,10 +1,7 @@
 package com.baedal.review.adapter.persistence.entity;
 
-import com.baedal.review.adapter.persistence.converter.ReviewScoreConverter;
-import com.baedal.review.domain.model.ReviewScore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,8 +36,7 @@ public class ReviewAggregate {
   private Long orderId;
 
   @Column(nullable = false)
-  @Convert(converter = ReviewScoreConverter.class)
-  private ReviewScore score;
+  private Integer score;
 
   @CreationTimestamp
   private LocalDateTime createdAt;
@@ -58,7 +54,7 @@ public class ReviewAggregate {
   }
 
   @Builder
-  public ReviewAggregate(Long id, Long reviewerId, Long storeId, Long orderId, ReviewScore score,
+  public ReviewAggregate(Long id, Long reviewerId, Long storeId, Long orderId, Integer score,
       LocalDateTime createdAt, String content, List<ReviewAttachmentEntity> attachments) {
     this.id = id;
     this.reviewerId = reviewerId;

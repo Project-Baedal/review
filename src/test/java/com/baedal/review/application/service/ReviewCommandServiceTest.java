@@ -73,7 +73,7 @@ class ReviewCommandServiceTest {
         .reviewerId(r.getCustomerId())
         .storeId(r.getStoreId())
         .orderId(r.getOrderId())
-        .score(r.getScore())
+        .score(r.getScore().getValue())
         .content(r.getContent())
         .attachments(List.of())
         .build();
