@@ -99,10 +99,7 @@ public class ReviewService {
     // Fetch All Customers
     Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
 
-    // Mapping id-customer
-    Map<Long, Customer> customerMap = makeCustomerMap(customers);
-
-    return reviewSummaryMapper.toReviewSummaryList(reviewSummaries, customerMap);
+    return reviewSummaryMapper.toReviewSummaryList(reviewSummaries, customers);
   }
 
   @Cacheable(
