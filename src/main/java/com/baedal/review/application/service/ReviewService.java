@@ -1,11 +1,15 @@
 package com.baedal.review.application.service;
 
+import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
+import com.baedal.review.application.mapper.ReviewEntityMapper;
 import com.baedal.review.application.mapper.ReviewSummaryMapper;
+import com.baedal.review.application.port.dto.CreateReviewCommand;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.dto.StoreReviewSummary;
 import com.baedal.review.application.port.out.CustomerPort;
+import com.baedal.review.application.port.out.ReviewCommandPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
 import com.baedal.review.domain.model.DomainSlice;
@@ -22,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewQueryService {
+public class ReviewService {
 
   private final ReviewDetailMapper reviewDetailMapper;
 
@@ -30,7 +34,25 @@ public class ReviewQueryService {
 
   private final CustomerPort customerPort;
 
+  private final ReviewCommandPort reviewCommandPort;
+
   private final ReviewQueryPort reviewQueryPort;
+
+  private final ReviewEntityMapper mapper;
+
+  @Transactional
+  public Long create(CreateReviewCommand.Request request) {
+    ReviewAggregate entity = mapper.toEntity(request);
+    return reviewCommandPort.save(entity);
+  }
+
+  @Transactional
+  public void delete(Long reviewId) {
+    // TODO: 삭제 기능 권한 검증. customer 본인/ owner...
+    ReviewAggregate entity = new ReviewAggregate(reviewId);
+    reviewCommandPort.delete(entity);
+  }
+
 
   @Transactional(readOnly = true)
   public PagedResponse<ReviewDetail> findReviewDetailsByStore(
@@ -45,13 +67,10 @@ public class ReviewQueryService {
     // Fetch All Customers
     Collection<Customer> customers = customerPort.getCustomersByIds(customerIds);
 
-    // Mapping id-customer
-    Map<Long, Customer> customerMap = makeCustomerMap(customers);
-
     // Entity to DTO with Map
     List<ReviewDetail> data = reviewDetailMapper.toReviewDetailList(
         slice.getContent(),
-        customerMap);
+        customers);
 
     return reviewDetailMapper.toPagedResponse(
         data,

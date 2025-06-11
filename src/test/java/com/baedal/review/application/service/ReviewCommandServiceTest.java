@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 class ReviewCommandServiceTest {
 
   @InjectMocks
-  private ReviewCommandService service;
+  private ReviewService service;
 
   @Mock
   private ReviewCommandPort commandPort;

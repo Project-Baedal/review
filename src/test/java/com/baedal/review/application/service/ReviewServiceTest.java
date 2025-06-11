@@ -1,6 +1,5 @@
 package com.baedal.review.application.service;
 
-import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
@@ -15,9 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -26,9 +22,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ReviewQueryServiceTest {
+class ReviewServiceTest {
   @InjectMocks
-  private ReviewQueryService service;
+  private ReviewService service;
 
   @Mock
   private ReviewQueryPort reviewQueryPort;

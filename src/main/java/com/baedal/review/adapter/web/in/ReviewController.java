@@ -8,8 +8,7 @@ import com.baedal.review.application.port.dto.CreateReviewCommand;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.dto.StoreReviewSummary;
-import com.baedal.review.application.service.ReviewCommandService;
-import com.baedal.review.application.service.ReviewQueryService;
+import com.baedal.review.application.service.ReviewService;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +28,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class ReviewController {
 
-  private final ReviewCommandService commandService;
-
-  private final ReviewQueryService reviewQueryService;
+  private final ReviewService service;
 
   private final WebReviewMapper mapper;
 
   @PostMapping
   public ResponseEntity<Void> createReview(@RequestBody CreateReviewRequest request) {
     CreateReviewCommand.Request commandReq = mapper.toCommand(request);
-    Long reviewId = commandService.create(commandReq);
+    Long reviewId = service.create(commandReq);
 
     URI uri = ServletUriComponentsBuilder
         .fromCurrentRequest()
@@ -51,21 +48,21 @@ public class ReviewController {
 
   @DeleteMapping("/{reviewId}")
   public ResponseEntity<Void> deleteReview(@PathVariable("reviewId") Long reviewId) {
-    commandService.delete(reviewId);
+    service.delete(reviewId);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{storeId}/summary")
   public ResponseEntity<GetStoreTop10ReviewsResponse> getStoreTop10Reviews(
       @PathVariable("storeId") Long storeId) {
-    List<StoreReviewSummary> summaries = reviewQueryService.findTop10ReviewSummary(storeId);
+    List<StoreReviewSummary> summaries = service.findTop10ReviewSummary(storeId);
     GetStoreTop10ReviewsResponse response = mapper.toResponse(summaries);
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{storeId}/average-score")
   public ResponseEntity<GetAverageScoreResponse> getAverageScore(@PathVariable Long storeId) {
-    Double average = reviewQueryService.findAverageScoreOfStore(storeId);
+    Double average = service.findAverageScoreOfStore(storeId);
     GetAverageScoreResponse response = mapper.toResponse(average);
     return ResponseEntity.ok(response);
   }
@@ -77,7 +74,7 @@ public class ReviewController {
       @RequestParam(defaultValue = "10") Integer size) {
     size = Integer.max(size, 10);
 
-    PagedResponse<ReviewDetail> response = reviewQueryService
+    PagedResponse<ReviewDetail> response = service
         .findReviewDetailsByStore(storeId, pageNumber, size);
     return ResponseEntity.ok(response);
   }
