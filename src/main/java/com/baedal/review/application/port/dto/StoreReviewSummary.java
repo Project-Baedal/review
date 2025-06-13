@@ -1,6 +1,6 @@
 package com.baedal.review.application.port.dto;
 
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,6 +21,7 @@ public class StoreReviewSummary {
   public static class Reviewer {
 
     private final Long customerId;
+
     private final String name;
   }
 }

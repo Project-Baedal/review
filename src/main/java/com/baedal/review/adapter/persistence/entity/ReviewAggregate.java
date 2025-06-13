@@ -3,8 +3,6 @@ package com.baedal.review.adapter.persistence.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +19,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewAggregate {
 
@@ -31,6 +26,7 @@ public class ReviewAggregate {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Column(nullable = false)
   private Long reviewerId;
 
   @Column(nullable = false)
@@ -40,8 +36,7 @@ public class ReviewAggregate {
   private Long orderId;
 
   @Column(nullable = false)
-  @Enumerated(EnumType.ORDINAL)
-  private ReviewScore score;
+  private Integer score;
 
   @CreationTimestamp
   private LocalDateTime createdAt;
@@ -52,9 +47,22 @@ public class ReviewAggregate {
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   @JoinColumn(name = "review_id")
-  private List<ReviewAttachment> attachments = new ArrayList<>();
+  private List<ReviewAttachmentEntity> attachments = new ArrayList<>();
 
   public ReviewAggregate(Long id) {
     this.id = id;
+  }
+
+  @Builder
+  public ReviewAggregate(Long id, Long reviewerId, Long storeId, Long orderId, Integer score,
+      LocalDateTime createdAt, String content, List<ReviewAttachmentEntity> attachments) {
+    this.id = id;
+    this.reviewerId = reviewerId;
+    this.storeId = storeId;
+    this.orderId = orderId;
+    this.score = score;
+    this.createdAt = createdAt;
+    this.content = content;
+    this.attachments = attachments;
   }
 }

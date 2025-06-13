@@ -1,7 +1,7 @@
 package com.baedal.review.application.service;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
-import com.baedal.review.adapter.persistence.entity.ReviewScore;
+import com.baedal.review.domain.model.ReviewScore;
 import com.baedal.review.application.mapper.ReviewEntityMapper;
 import com.baedal.review.application.port.dto.CreateReviewCommand;
 import com.baedal.review.application.port.dto.CreateReviewCommand.Request;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 class ReviewCommandServiceTest {
 
   @InjectMocks
-  private ReviewCommandService service;
+  private ReviewService service;
 
   @Mock
   private ReviewCommandPort commandPort;
@@ -73,7 +73,7 @@ class ReviewCommandServiceTest {
         .reviewerId(r.getCustomerId())
         .storeId(r.getStoreId())
         .orderId(r.getOrderId())
-        .score(r.getScore())
+        .score(r.getScore().getValue())
         .content(r.getContent())
         .attachments(List.of())
         .build();

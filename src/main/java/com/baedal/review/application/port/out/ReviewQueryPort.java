@@ -2,6 +2,9 @@ package com.baedal.review.application.port.out;
 
 import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.adapter.persistence.projection.ReviewSummaryProjection;
+import com.baedal.review.domain.model.DomainSlice;
+import com.baedal.review.domain.model.Review;
+import com.baedal.review.domain.model.ReviewSummary;
 import java.util.List;
 import org.springframework.data.domain.Slice;
 
@@ -9,11 +12,11 @@ import org.springframework.data.domain.Slice;
 //  - 연관관계 조회 전략 적용하기.(근데 MSA임)
 public interface ReviewQueryPort {
 
-  ReviewAggregate findById(Long reviewId);
+  Review findById(Long reviewId);
 
-  List<ReviewSummaryProjection> findTop10ReviewOfStore(Long storeId);
+  List<ReviewSummary> findTop10ReviewOfStore(Long storeId);
 
   Double calculateAverageScore(Long storeId);
 
-  Slice<ReviewAggregate> findByStoreId(Long storeId, Integer number, Integer size);
+  DomainSlice<Review> findByStoreId(Long storeId, Integer number, Integer size);
 }

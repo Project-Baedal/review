@@ -1,21 +1,19 @@
 package com.baedal.review.application.service;
 
-import com.baedal.review.adapter.persistence.entity.ReviewAggregate;
 import com.baedal.review.application.mapper.ReviewDetailMapper;
 import com.baedal.review.application.port.dto.PagedResponse;
 import com.baedal.review.application.port.dto.ReviewDetail;
 import com.baedal.review.application.port.out.CustomerPort;
 import com.baedal.review.application.port.out.ReviewQueryPort;
 import com.baedal.review.domain.model.Customer;
+import com.baedal.review.domain.model.DomainSlice;
+import com.baedal.review.domain.model.Review;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -24,9 +22,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ReviewQueryServiceTest {
+class ReviewServiceTest {
   @InjectMocks
-  private ReviewQueryService service;
+  private ReviewService service;
 
   @Mock
   private ReviewQueryPort reviewQueryPort;
@@ -45,14 +43,19 @@ class ReviewQueryServiceTest {
     int size = 2;
 
     // Mock review aggregates
-    ReviewAggregate review1 = mock(ReviewAggregate.class);
-    ReviewAggregate review2 = mock(ReviewAggregate.class);
+    Review review1 = mock(Review.class);
+    Review review2 = mock(Review.class);
 
     when(review1.getReviewerId()).thenReturn(101L);
     when(review2.getReviewerId()).thenReturn(102L);
 
-    List<ReviewAggregate> reviewList = List.of(review1, review2);
-    Slice<ReviewAggregate> slice = new SliceImpl<>(reviewList, PageRequest.of(page, size), true);
+    List<Review> reviewList = List.of(review1, review2);
+    DomainSlice<Review> slice = DomainSlice.<Review>builder()
+        .content(reviewList)
+        .hasNext(true)
+        .number(page)
+        .size(size)
+        .build();
 
     when(reviewQueryPort.findByStoreId(storeId, page, size)).thenReturn(slice);
 
@@ -92,5 +95,4 @@ class ReviewQueryServiceTest {
     verify(reviewDetailMapper).toReviewDetail(review2, customer2);
     verify(reviewDetailMapper).toPagedResponse(mappedList, true, page, size);
   }
-
 }
